@@ -1,0 +1,4 @@
+1. run server
+php -S localhost:8080
+
+2. PATH_INFO (key yg ada di global variabel)
