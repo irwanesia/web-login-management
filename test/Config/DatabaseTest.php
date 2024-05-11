@@ -1,11 +1,11 @@
 <?php
 
-namespace Codeir\BelajarPHPMvc\App\Config;
+namespace Codeir\BelajarPHPMvc\Config;
+
 use PHPUnit\Framework\TestCase;
 
 
 // 07. membuat unit test untuk database connection
-
 
 class DatabaseTest extends TestCase
 {

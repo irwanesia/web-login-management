@@ -1,26 +1,19 @@
 <?php
 
-// 1. router sederhana
-// $path = "/index";
-
-// if (isset($_SERVER['PATH_INFO'])) {
-//     $path = $_SERVER['PATH_INFO'];
-// }
-
-// require __DIR__ . '/../app/View' . $path . '.php';
-
-// 2. router kompleks
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Codeir\BelajarPHPMvc\App\Router;
 use Codeir\BelajarPHPMvc\Controller\HomeController;
-use Codeir\BelajarPHPMvc\Controller\ProductController;
-use Codeir\BelajarPHPMvc\Middleware\AuthMiddleware;
+use Codeir\BelajarPHPMvc\Controller\UserController;
+use Codeir\BelajarPHPMvc\Config\Database;
 
-Router::add('GET', '/products/([0-9a-zA-Z]*)/categories/([0-9a-zA-Z]*)', ProductController::class, 'categories');
+Database::getConnection('prod');
 
-Router::add('GET', '/', HomeController::class, 'index');
-Router::add('GET', '/hello', HomeController::class, 'hello', [AuthMiddleware::class]);
-Router::add('GET', '/world', HomeController::class, 'world', [AuthMiddleware::class]);
+// home controller
+Router::add('GET', '/', HomeController::class, 'index', []);
+
+// user controller
+Router::add('GET', '/users/register', UserController::class, 'register', []);
+Router::add('POST', '/users/register', UserController::class, 'postRegister', []);
 
 Router::run();

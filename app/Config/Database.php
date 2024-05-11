@@ -1,7 +1,7 @@
 <?php 
 
 // 06. membuat/setup koneksi ke database
-namespace Codeir\BelajarPHPMvc\App\Config;
+namespace Codeir\BelajarPHPMvc\Config;
 
 class Database
 {
@@ -12,12 +12,26 @@ class Database
             // create new PDO
             require_once __DIR__ . '/../../config/database.php';
             $config = getDatabaseConfig();
-            self::PDO = new \PDO(
+            self::$pdo = new \PDO(
                 $config['database'][$env]['url'],
                 $config['database'][$env]['username'],
                 $config['database'][$env]['password'],
             );
         }
         return self::$pdo;
+    }
+
+    // ini disarankan untuk dilakukan jika melakukan operasi transaksi
+    public static function beginTransaction()
+    {
+        self::$pdo->beginTransaction();
+    }
+    public static function commitTransaction()
+    {
+        self::$pdo->commit();
+    }
+    public static function rollbackTransaction()
+    {
+        self::$pdo->rollBack();
     }
 }
