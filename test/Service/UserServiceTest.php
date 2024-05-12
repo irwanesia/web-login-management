@@ -3,10 +3,9 @@
 namespace Codeir\BelajarPHPMvc\Test;
 
 // use CodeIgniter\Debug\Toolbar\Collectors\Database;
+use Codeir\BelajarPHPMvc\Model\UserLoginRequest;
 use Codeir\BelajarPHPMvc\Model\UserRegisterRequest;
-use Codeir\BelajarPHPMvc\Model\UserRegisterResponse;
 use Endroid\QrCode\Exception\ValidationException;
-use phpDocumentor\Reflection\Types\Void_;
 use PHPUnit\Framework\TestCase;
 use Codeir\BelajarPHPMvc\Config\Database;
 use Codeir\BelajarPHPMvc\Service\UserService;
@@ -77,5 +76,52 @@ class UserServiceTest extends TestCase
 
         $this->userService->register($request);        
 
+    }
+
+    // unit test untuk user login
+    public function testLoginNotFound()
+    {
+        $this->expectException(ValidationException::class);
+        
+        $request = new UserLoginRequest();
+        $request->id = "1";
+        $request->name = "irwan";
+        $request->password = "1234";
+
+        $this->userService->postLogin($request);
+    }
+
+    public function testLoginWrongPassword()
+    {
+        $user = new User();
+        $user->id = "1";
+        $user->name = "irwan";
+        $user->password = password_hash("1234", PASSWORD_DEFAULT);
+
+        $this->expectException(ValidationException::class);
+
+        $request = new UserLoginRequest();
+        $request->id = "1";
+        $request->password = "1234x";
+
+        $this->userService->login($request);
+    }
+    public function testLoginSuccess()
+    {
+        $user = new User();
+        $user->id = "1";
+        $user->name = "irwan";
+        $user->password = password_hash("1234", PASSWORD_DEFAULT);
+
+        $this->expectException(ValidationException::class);
+
+        $request = new UserLoginRequest();
+        $request->id = "1";
+        $request->password = "1234";
+
+        $response = $this->userService->login($request);
+
+        self::assertEquals($request->id, $response->user->id);
+        self::assertTrue(password_hash($request->password, $response->user->password));
     }
 }

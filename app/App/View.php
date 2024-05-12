@@ -14,6 +14,9 @@ class View
     public static function redirect(string $url)
     {
         header("Location: $url");
-        exit();
+        // mengatasi unit test testPostRegisterSuccess()
+        if(getenv('mode') != 'test'){
+            exit();
+        }
     }
 }

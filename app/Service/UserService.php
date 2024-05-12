@@ -3,6 +3,8 @@
 namespace Codeir\BelajarPHPMvc\Service;
 // use CodeIgniter\Debug\Toolbar\Collectors\Database;
 use Codeir\BelajarPHPMvc\Exception\ValidationException;
+use Codeir\BelajarPHPMvc\Model\UserLoginRequest;
+use Codeir\BelajarPHPMvc\Model\UserLoginResponse;
 use Codeir\BelajarPHPMvc\Model\UserRegisterRequest;
 use Codeir\BelajarPHPMvc\Model\UserRegisterResponse;
 use Codeir\BelajarPHPMvc\Repository\UserRepository;
@@ -53,6 +55,32 @@ class UserService
         if($request->id == null || $request->name == null || $request->password == null || trim($request->id) == "" || trim($request->name) == "" || trim($request->password) == "")
         {
             throw new ValidationException("id, name, password can't blank!");
+        }
+    }
+    
+    public function login(UserLoginRequest $request): UserLoginResponse
+    {
+        $this->validateUserLoginRequest($request);
+
+        $user = $this->userRepository->findById($request->id);
+        if($user == null){
+            throw new ValidationException("Username or password is wrong");
+        }
+
+        if(password_verify($request->password, $user->password)){
+            $response = new UserLoginResponse();
+            $response->user = $user;
+            return $response;
+        }else{
+            throw new ValidationException("Id or password is wrong");
+        }
+    }
+
+    private function validateUserLoginRequest(UserLoginRequest $request)
+    {
+        if($request->id == null || $request->password == null || trim($request->id) == "" || trim($request->password) == "")
+        {
+            throw new ValidationException("id, password can't blank!");
         }
     }
 }
